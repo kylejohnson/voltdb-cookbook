@@ -14,3 +14,8 @@
   run python2.7 --version
   [ "$status" -eq 0 ]
 }
+
+@test "Java SDK 7 is installed" {
+  run /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java -version
+  [ "$status" -eq 0 ]
+}
