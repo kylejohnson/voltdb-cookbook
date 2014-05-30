@@ -9,3 +9,19 @@ git "/opt/voltdb" do
 end
 
 cookbook_file "/tmp/voltdb.sql"
+
+bash "compile voltdb db" do
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  /opt/voltdb/bin/voltdb compile voltdb.sql
+  EOH
+end
+
+bash "Start VoltDB" do
+  user "root"
+  cwd "/tmp"
+  code <<-EOH
+  /opt/voltdb/bin/voltdb create catalog.jar
+  EOH
+end
