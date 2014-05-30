@@ -2,4 +2,9 @@
   package pkg
 end
 
+git "/opt/voltdb" do
+  repository "https://github.com/VoltDB/voltdb.git"
+  revision "master"
+  action :sync
+end
 
