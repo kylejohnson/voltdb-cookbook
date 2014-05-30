@@ -8,3 +8,4 @@ git "/opt/voltdb" do
   action :sync
 end
 
+cookbook_file "/tmp/voltdb.sql"
