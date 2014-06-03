@@ -1,3 +1,4 @@
+cookbook_file "/tmp/voltdb.sql"
 
 bash "Update apt" do
   user "root"
@@ -14,7 +15,6 @@ git "/opt/voltdb" do
   action :sync
 end
 
-cookbook_file "/tmp/voltdb.sql"
 
 bash "compile voltdb db" do
   user "root"
