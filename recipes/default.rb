@@ -9,25 +9,28 @@ end
   package pkg
 end
 
-git "/opt/voltdb" do
-  repository "https://github.com/VoltDB/voltdb.git"
-  revision "master"
-  action :sync
+bash "Download VoltDB" do
+  user "root"
+  cwd "/tmp"
+  code "wget 'http://voltdb.com/downloads/loader.php?kit=LinuxEnterpriseServer&j=' -O voltdb-linux.tgz"
+  creates "/tmp/voltdb-linux.tgz"
 end
 
+bash "Extract VoltDB" do
+  user "root"
+  code "tar -zxf /tmp/voltdb-linux.tgz -C /opt/"
+  creates "/opt/voltdb-ent-4.3"
+end
 
 bash "compile voltdb db" do
   user "root"
   cwd "/tmp"
-  code <<-EOH
-  /opt/voltdb/bin/voltdb compile voltdb.sql
-  EOH
+  code "/opt/voltdb-ent-4.3/bin/voltdb compile /tmp/voltdb.sql"
+  creates "/tmp/catalog.jar"
 end
 
 bash "Start VoltDB" do
   user "root"
   cwd "/tmp"
-  code <<-EOH
-  /opt/voltdb/bin/voltdb create catalog.jar
-  EOH
+  code "nohup /opt/voltdb-ent-4.3/bin/voltdb create /tmp/catalog.jar &"
 end
