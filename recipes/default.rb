@@ -22,7 +22,12 @@ bash "Extract VoltDB" do
   creates "/opt/voltdb-ent-4.3"
 end
 
-bash "compile voltdb db" do
+bash "Use java 7" do
+  user "root"
+  code "rm /etc/alternatives/java && sudo ln -s /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java /etc/alternatives/java"
+end
+
+bash "Compile VoltDB Catalog" do
   user "root"
   cwd "/tmp"
   code "/opt/voltdb-ent-4.3/bin/voltdb compile /tmp/voltdb.sql"
