@@ -1,4 +1,10 @@
-%w{python2.7 git ntp openjdk-7-jdk openjdk-7-jre-headless}.each do |pkg|
+
+bash "Update apt" do
+  user "root"
+  code "apt-get update"
+end
+
+%w{ ant build-essential ant-optional openjdk-7-jdk openjdk-7-jre-headless python valgrind ntp ccache git-arch git-completion git-core git-svn git-doc git-email python-httplib2 python-setuptools python-dev apt-show-versions}.each do |pkg|
   package pkg
 end
 
