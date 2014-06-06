@@ -1,5 +1,16 @@
 cookbook_file "/tmp/voltdb.sql"
 
+template "/tmp/deployment.xml" do
+  variables(
+    :hostcount => 3,
+    :sitesperhost => 4,
+    :kfactor => 1,
+    :httpd_enabled => 'true',
+    :httpd_port => 8080,
+    :jsonapi_enabled => 'true'
+  )
+end
+
 bash "Update apt" do
   user "root"
   code "apt-get update"
@@ -37,6 +48,6 @@ end
 bash "Start VoltDB" do
   user "root"
   cwd "/tmp"
-  code "nohup /opt/voltdb-ent-4.3/bin/voltdb create /tmp/catalog.jar &"
+  code "nohup /opt/voltdb-ent-4.3/bin/voltdb create /tmp/catalog.jar --deployment=/tmp/deployment.xml &"
   not_if '/opt/voltdb_ent_4.3/bin/sqlcmd --query="select * from artists"'
 end
