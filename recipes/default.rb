@@ -38,4 +38,5 @@ bash "Start VoltDB" do
   user "root"
   cwd "/tmp"
   code "nohup /opt/voltdb-ent-4.3/bin/voltdb create /tmp/catalog.jar &"
+  not_if '/opt/voltdb_ent_4.3/bin/sqlcmd --query="select * from artists"'
 end
