@@ -1,22 +1,11 @@
 cookbook_file "/tmp/voltdb.sql"
 
-template "/tmp/deployment.xml" do
-  variables(
-    :hostcount => 3,
-    :sitesperhost => 4,
-    :kfactor => 1,
-    :httpd_enabled => 'true',
-    :httpd_port => 8080,
-    :jsonapi_enabled => 'true'
-  )
-end
-
 bash "Update apt" do
   user "root"
   code "apt-get update"
 end
 
-%w{ ant build-essential ant-optional openjdk-7-jdk openjdk-7-jre-headless python valgrind ntp ccache git-arch git-completion git-core git-svn git-doc git-email python-httplib2 python-setuptools python-dev apt-show-versions}.each do |pkg|
+%w{ ant build-essential ant-optional openjdk-7-jdk openjdk-7-jre-headless python valgrind ntp ccache git-arch git-completion git-core git-svn git-doc git-email python-httplib2 python-setuptools python-dev apt-show-versions wget }.each do |pkg|
   package pkg
 end
 
@@ -30,24 +19,22 @@ end
 bash "Extract VoltDB" do
   user "root"
   code "tar -zxf /tmp/voltdb-linux.tgz -C /opt/"
-  creates "/opt/voltdb-ent-4.3"
+  creates "/opt/voltdb-ent-4.4"
 end
 
 bash "Use java 7" do
   user "root"
   code "rm /etc/alternatives/java && sudo ln -s /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java /etc/alternatives/java"
+  not_if 'readlink /etc/alternatives/java|grep java-7'
 end
 
-bash "Compile VoltDB Catalog" do
+bash "Disable swap" do
   user "root"
-  cwd "/tmp"
-  code "/opt/voltdb-ent-4.3/bin/voltdb compile /tmp/voltdb.sql"
-  creates "/tmp/catalog.jar"
+  code "swapoff -a"
 end
 
-bash "Start VoltDB" do
+bash "Enable Virtual Memory Overcommit" do
   user "root"
-  cwd "/tmp"
-  code "nohup /opt/voltdb-ent-4.3/bin/voltdb create /tmp/catalog.jar --deployment=/tmp/deployment.xml &"
-  not_if '/opt/voltdb_ent_4.3/bin/sqlcmd --query="select * from artists"'
+  code "sysctl -w vm.overcommit_memory=1"
+  not_if 'sysctl vm.overcommit_memory|grep 1'
 end
