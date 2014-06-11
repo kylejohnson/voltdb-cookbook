@@ -1,2 +1,3 @@
 .kitchen/
 .kitchen.local.yml
+recipes/syntax_check_cache/
