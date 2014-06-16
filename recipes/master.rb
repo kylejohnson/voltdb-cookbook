@@ -1,3 +1,5 @@
+cookbook_file "/tmp/voltdb.sql"
+
 template "/tmp/deployment.xml" do
   variables(
     :hostcount => 3,

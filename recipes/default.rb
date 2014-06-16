@@ -1,5 +1,3 @@
-cookbook_file "/tmp/voltdb.sql"
-
 bash "Update apt" do
   user "root"
   code "apt-get update"
