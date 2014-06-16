@@ -7,7 +7,15 @@ template "/tmp/deployment.xml" do
     :kfactor => 1,
     :httpd_enabled => 'true',
     :httpd_port => 8080,
-    :jsonapi_enabled => 'true'
+    :jsonapi_enabled => 'true',
+    :snapshot_prefix => 'snapshot',
+    :snapshot_freq => '30m',
+    :snapshot_retain => 3,
+    :commandlog_logsize => 3072,
+    :path_command_log => '/media/voltdb/cmdlog',
+    :path_command_log_snapshot => '/media/voltdb/cmdsnaps',
+    :path_snapshot => '/media/voltdb/autosnaps',
+    :path_voltdb_root => '/media/voltdb'
   )
 end
 

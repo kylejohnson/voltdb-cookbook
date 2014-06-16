@@ -1,10 +1,21 @@
 <?xml version="1.0"?>
 <deployment>
-  <cluster hostcount="<%= @hostcount %>"
-           sitesperhost="<%= @sitesperhost %>"
-           kfactor="<%= @kfactor %>"
-      />
-  <httpd enabled="<%= @httpd_enabled %>" port="<%= @httpd_port %>">
-    <jsonapi enabled="<%= @jsonapi_enabled %>"/>
-  </httpd>
+	<cluster hostcount="<%= @hostcount %>"
+		sitesperhost="<%= @sitesperhost %>"
+		kfactor="<%= @kfactor %>"
+	/>
+	<snapshot prefix="<%= @snapshot_prefix %>"
+		frequency="<%= @snapshot_freq %>"
+		retain="<%= @snapshot_retain %>"
+	/>
+	<commandlog enabled="true" logsize="<%= @commandlog_logsize %>" />
+	<paths>
+		<commandlog path="<%= @path_command_log %>" />
+		<commandlogsnapshot path="<%= @path_command_log_snapshot" />
+		<snapshots path="<%= @path_snapshot %>" />
+		<voltdbroot path="<%= @path_voltdb_root %>" />
+	</paths>
+	<httpd enabled="<%= @httpd_enabled %>" port="<%= @httpd_port %>">
+		<jsonapi enabled="<%= @jsonapi_enabled %>"/>
+	</httpd>
 </deployment>
