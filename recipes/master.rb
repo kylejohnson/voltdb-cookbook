@@ -1,6 +1,9 @@
-cookbook_file "/tmp/voltdb.sql"
+cookbook_file "schema" do
+  path "/media/voltdb/"
+  source "schema.sql"
+end
 
-template "/tmp/deployment.xml" do
+template "/media/voltdb/deployment.xml" do
   variables(
     :hostcount => 3,
     :sitesperhost => 4,
@@ -21,14 +24,14 @@ end
 
 bash "Compile VoltDB Catalog" do
   user "root"
-  cwd "/tmp"
-  code "/opt/voltdb-ent-4.4/bin/voltdb compile /tmp/voltdb.sql"
-  creates "/tmp/catalog.jar"
+  cwd "/media/voltdb"
+  code "/opt/voltdb-ent-4.4/bin/voltdb compile /media/voltdb/schema.sql"
+  creates "/media/voltdb/catalog.jar"
 end
 
 bash "Start VoltDB" do
   user "root"
-  cwd "/tmp"
-  code "nohup /opt/voltdb-ent-4.4/bin/voltdb create /tmp/catalog.jar --host=`ifconfig eth0|grep 'inet addr'|awk '{print $2}'|cut -f 2 -d ':'` --deployment=/tmp/deployment.xml &"
-  not_if '/opt/voltdb-ent-4.3/bin/sqlcmd --query="select * from artists"'
+  cwd "/media/voltdb"
+  code "/opt/voltdb-ent-4.4/bin/voltdb create /media/voltdb/catalog.jar -B --host=`ifconfig eth0|grep 'inet addr'|awk '{print $2}'|cut -f 2 -d ':'` --deployment=/media/voltdb/deployment.xml"
+  not_if 'jps | grep VoltDB'
 end
