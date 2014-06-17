@@ -1,5 +1,5 @@
-voltdb_master = search(:node, 'role:voltdb_master').first
-voltdb_master_ip = voltdb_master["cloud"]["local_ipv4"].to_s
+voltdb = search(:node, 'role:voltdb').first
+voltdb_ip = voltdb["cloud"]["local_ipv4"].to_s
 
 bash "Update apt" do
   user "root"
