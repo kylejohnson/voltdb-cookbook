@@ -7,6 +7,30 @@ end
   package pkg
 end
 
+cookbook_file "schema" do
+  path "/media/voltdb/schema.sql"
+  source "schema.sql"
+end
+
+template "/media/voltdb/deployment.xml" do
+  variables(
+    :hostcount => 3,
+    :sitesperhost => 4,
+    :kfactor => 1,
+    :httpd_enabled => 'true',
+    :httpd_port => 8080,
+    :jsonapi_enabled => 'true',
+    :snapshot_prefix => 'snapshot',
+    :snapshot_freq => '30m',
+    :snapshot_retain => 3,
+    :commandlog_logsize => 3072,
+    :path_command_log => '/media/voltdb/cmdlog',
+    :path_command_log_snapshot => '/media/voltdb/cmdsnaps',
+    :path_snapshot => '/media/voltdb/autosnaps',
+    :path_voltdb_root => '/media/voltdb'
+  )
+end
+
 bash "Download VoltDB" do
   user "root"
   cwd "/tmp"
@@ -36,3 +60,11 @@ bash "Enable Virtual Memory Overcommit" do
   code "sysctl -w vm.overcommit_memory=1"
   not_if 'sysctl vm.overcommit_memory|grep 1'
 end
+
+bash "Compile VoltDB Catalog" do
+  user "root"
+  cwd "/media/voltdb"
+  code "/opt/voltdb-ent-4.4/bin/voltdb compile /media/voltdb/schema.sql"
+  creates "/media/voltdb/catalog.jar"
+end
+
